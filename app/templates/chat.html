@@ -1,0 +1,44 @@
+<!-- app/templates/chat.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart E-Commerce Chatbot</title>
+  <style>
+    body { font-family: Arial; margin: 40px; background: #f7f7f7; }
+    h1 { text-align: center; }
+    #chat-box { width: 60%; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+    .message { margin-bottom: 10px; }
+    .user { font-weight: bold; color: blue; }
+    .bot { font-weight: bold; color: green; }
+  </style>
+</head>
+<body>
+  <h1>🤖 Talk to your Smart E-Commerce Assistant</h1>
+  <div id="chat-box"></div>
+  <div style="text-align: center; margin-top: 20px;">
+    <textarea id="user-input" rows="3" cols="60" placeholder="Type your message..."></textarea><br>
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById("user-input").value;
+      if (!input.trim()) return;
+
+      const chatBox = document.getElementById("chat-box");
+      chatBox.innerHTML += `<div class="message user">🧑‍💼 You: ${input}</div>`;
+
+      const response = await fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: input })
+      });
+      const data = await response.json();
+      chatBox.innerHTML += `<div class="message bot">🤖 Bot: ${data.answer}</div>`;
+      document.getElementById("user-input").value = "";
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  </script>
+</body>
+</html>
