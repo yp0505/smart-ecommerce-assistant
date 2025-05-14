@@ -1,149 +1,105 @@
-# 🛍️ Smart E-Commerce Assistant 🤖
+# 🛍️ Smart E-Commerce Assistant Chatbot
 
-> Your AI-powered shopping companion built with FastAPI, OLLaMA, and modular microservices.
+Your private AI-powered e-commerce companion built with **FastAPI**, **OLLaMA**, and clean **OOP microservices**.
 
 ---
 
-## 🔥 Overview
+## 🚀 Overview
+A conversational chatbot that can:
+- 🛒 Answer product-related questions
+- 📦 Track and explain order history
+- 🤖 Use a local LLM (LLaMA2 via OLLaMA) to generate human-like replies
 
-A multi-turn conversational chatbot that intelligently answers product and order queries for an e-commerce store. It leverages OLLaMA's LLaMA2 model for human-like responses, a lightweight in-memory vector search for product ranking, and a clean OOP codebase with microservices for scalability.
+This assistant isn't just rules-based — it's prompt-engineered with real RAG-like context passing.
 
 ---
 
 ## 🧰 Tech Stack
 
-| Technology        | Purpose                                      |
-|------------------|----------------------------------------------|
-| **FastAPI**       | Web framework for API and routing            |
-| **Python (OOP)**  | Modular and clean service logic              |
-| **OLLaMA**        | LLM engine for generating contextual replies |
-| **LLaMA2**        | Underlying LLM model used via OLLaMA         |
-| **Pandas**        | CSV-based order and product data handling    |
-| **Custom VectorStore** | Keyword-based similarity search over product info |
-| **HTML + JS**     | Chat UI using templates and fetch API        |
-| **Uvicorn**       | ASGI server to serve the app locally         |
+| Tool/Tech             | Usage                                                  |
+|-----------------------|---------------------------------------------------------|
+| **FastAPI**           | API framework for microservices                        |
+| **Python (OOP)**      | All services built using class-based architecture       |
+| **OLLaMA**            | Runs LLaMA2 locally for LLM responses                   |
+| **LLaMA2**            | Used for generating product and order summaries         |
+| **Custom VectorStore**| Lightweight keyword-based retrieval for product data    |
+| **Pandas**            | Order dataset filtering and manipulation                |
+| **Jinja2 + HTML/JS**  | Web-based UI for chat interaction                      |
+| **Uvicorn**           | ASGI server                                             |
 
 ---
 
-## 💡 Key Features
+## 🧠 What This Chatbot Can Do
 
-✅ Supports both product and order queries  
-✅ Interactive UI with memory support  
-✅ OLLaMA-backed dynamic product responses  
-✅ Custom intent detection and session tracking  
-✅ Modular microservice architecture  
-✅ Easily extensible for real vector DB and auth
+### 🔹 Product Intelligence
+Ask questions like:
+- "What are the top-rated guitar strings?"
+- "Which products are best for beginners?"
 
----
+It will use a vector store to fetch relevant items, build a custom prompt, and ask the LLM to answer like a shopping expert.
 
-## 🧠 How It Works
+### 🔹 Order Summaries
+Ask:
+- "What did I order last year?"
+- "Show me my recent car accessories orders"
 
-### System Flow
+It extracts and formats structured order data, and passes it to the LLM to explain like a human agent.
 
-```
-User ⇄ Chat UI ⇄ FastAPI
-         ⇓
-       /chat → Intent Router 🧠
-         ├── /product/query → TF-IDF-style search + OLLaMA
-         └── /order/orders/{id} → Pandas CSV lookup
-```
-
-- **PromptEngine** builds intelligent prompts using product data
-- **OrderManager** formats human-readable summaries for customers
-- **ChatRouter** tracks memory and awaits IDs if needed
+### 🔹 Multi-turn Conversations
+Supports:
+- Remembering intent across messages
+- Awaiting Customer ID in follow-ups
+- Responding naturally with OLLaMA-generated sentences
 
 ---
 
-## 🎯 Prompting with OLLaMA (Zero-shot)
+## 📚 Datasets Used
 
-```text
-Here are some products:
-- Ernie Ball Strings ($6.99)
-  Excellent tone and durability for electric guitars.
-- D'Addario Bronze ($10.99)
-  Smooth response for acoustic play.
+- **Product_Information_Dataset.csv**: 5,000+ musical product listings
+- **Order_Data_Dataset.csv**: Customer purchase data including sales, dates, shipping
 
-User Query: Best guitar strings under $15?
-Answer: ...
-```
-
-This prompt is passed to OLLaMA’s `LLaMA2` and the response is returned directly to the user.
+Used for Retrieval-Augmented Generation prompts and memory.
 
 ---
 
-## 🗂️ Microservices Breakdown
+## 🧪 Sample Interactions
 
-### 🔹 Chat Service (`app/chat/router.py`)
-- Detects intent (order/product)
-- Tracks conversation context
-- Routes to appropriate backend
+### Product Query:
+> **User:** What are the best guitar strings for acoustic guitars?
+>
+> **Bot:** "The D'Addario Phosphor Bronze Strings offer a balanced tone and are highly rated by 60K+ users at just $10.99."
 
-### 🔹 Product Service (`app/product/...`)
-- Uses a vector engine to find relevant items
-- Builds prompts and calls OLLaMA
-
-### 🔹 Order Service (`app/order/...`)
-- Uses Pandas to filter order data
-- Summarizes last order or all orders
-
----
-
-## 💬 Example Conversations
-
-**User:** "What are the best rated guitar accessories?"  
-**Bot:** "Here are some top picks: Ernie Ball Strings, Amazon A-Frame Stand, and D’Addario Bronze..."
-
-**User:** "What did I order last?"  
-**Bot:** "Please provide your Customer ID."
-
-**User:** "37077"  
-**Bot:** "You ordered 'Car Media Players' on Jan 2, 2018. Price: $140. Priority: Medium."
+### Order Query:
+> **User:** What is the status of my car body covers?
+>
+> **Bot:** "Please provide your Customer ID."
+>
+> **User:** 41066
+>
+> **Bot:** "You placed an order for 5 'Car Body Covers' on 2018-11-08 with a 'Critical' priority."
 
 ---
 
-## 📦 Datasets
-
-### `Order_Data_Dataset.csv`
-- Customer_Id, Product, Order_Date, Order_Priority, Sales, Shipping_Cost
-
-### `Product_Information_Dataset.csv`
-- Product, Description, Features, Price, Rating, Category
+## 🧬 Future Scope
+- Embed-based semantic vector search with FAISS or Chroma
+- Multilingual support via Mistral or Gemma
+- User auth, login, and order history memory
+- Hosted deployment on Railway, Render, or Fly.io
 
 ---
 
-## 💻 Run Locally
+## 🤝 Let’s Connect
+This project is a foundation for **Agentic AI assistants** in e-commerce. If you're building:
+- RAG agents
+- Local-first LLM tools
+- Conversational analytics for retail
 
-```bash
-git clone https://github.com/YOUR_USERNAME/smart-ecommerce-assistant.git
-cd smart-ecommerce-assistant
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-uvicorn app.main:app --reload
-```
+I'd love to collab! 👇
 
-Visit: [http://localhost:8000](http://localhost:8000)
-
-🧪 Open `/docs` for Swagger testing  
-🧑‍💻 Use the `/` route for the interactive HTML UI
+[![GitHub](https://img.shields.io/badge/GitHub-smart--ecommerce--assistant-blue?style=for-the-badge&logo=github)](https://github.com/yp0505/smart-ecommerce-assistant)
 
 ---
 
-## 🚀 Future Enhancements
+> Built with ❤️ by [**Yash Pise**](https://github.com/yp0505)
 
-- 🧬 Real vector DB (e.g., FAISS / Chroma)
-- 🔐 User login and session profiles
-- 🌍 Multilingual prompt generation
-- 📈 Analytics dashboard for admin use
-
----
-
-## 🎥 Demo
-
-📽️ [Click to watch full demo on Loom](https://www.loom.com/share/6bfa4d205ff54b0d81a48cfc88cd87f5?sid=7d7d7403-9584-47df-b64c-8180eb9da35c)
-
----
-
-## 👨‍💻 Author
-
-Built with ❤️ by [**Yash Pise**](https://github.com/yp0505)
+#LLM #OLLaMA #GenAI #FastAPI #Python #AgenticAI #RAG #Chatbots #OpenSource #YashBuilds
