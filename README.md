@@ -1,120 +1,117 @@
-# 🛒 **Smart E-Commerce Assistant** 🤖
+# 🛍️ Smart E-Commerce Assistant 🤖
 
-> A modular, AI-powered chatbot that can search products, retrieve orders, and simulate real conversations using vector search + LLM logic.
-
----
-
-## 🧰 **Tech Stack**
-
-✨ **LLM Engine**: Simulated with `PromptEngine`, compatible with local LLMs like **OLLaMA**  
-🧠 **In-memory Vector DB**: TF-IDF + Cosine Similarity via `scikit-learn`  
-⚡ **FastAPI**: Async, modern Python web framework  
-🐍 **Python OOP**: Clean class-based structure  
-📊 **Pandas**: Efficient CSV & tabular data manipulation  
-📈 **scikit-learn**: Vectorization & similarity scoring  
-🎨 **HTML/CSS**: Interactive local chat interface  
-🔌 **Uvicorn**: ASGI web server for dev & deployment
+> Your AI-powered shopping companion built with FastAPI, OLLaMA, and modular microservices.
 
 ---
 
-## 🚀 **Key Features**
+## 🔥 Overview
 
-✅ Multi-turn conversational assistant with memory  
-✅ Order summary and product recommendation logic  
-✅ RAG-powered responses using TF-IDF retrieval  
-✅ Clean OOP implementation & modular services  
-✅ Intelligent prompt logic simulating an LLM agent  
-✅ Lightweight and offline-friendly (OLLaMA-ready)
+A multi-turn conversational chatbot that intelligently answers product and order queries for an e-commerce store. It leverages OLLaMA's LLaMA2 model for human-like responses, a lightweight in-memory vector search for product ranking, and a clean OOP codebase with microservices for scalability.
 
 ---
 
-## 🧠 **How It Works**
+## 🧰 Tech Stack
 
-### 🔧 Architecture
-
-```
-User ⇄ HTML UI
-      ⇓
-   Chat Router 🧠
-     ├──→ Product Service 🔍 Vector Search
-     └──→ Order Service 📦 Lookup via Customer ID
-```
-
-- **Chat Router**: Classifies queries and handles chaining/memory
-- **Product Search**: Vectorizes and ranks items using TF-IDF
-- **Order Lookup**: Parses order CSV and summarizes results
+| Technology        | Purpose                                      |
+|------------------|----------------------------------------------|
+| **FastAPI**       | Web framework for API and routing            |
+| **Python (OOP)**  | Modular and clean service logic              |
+| **OLLaMA**        | LLM engine for generating contextual replies |
+| **LLaMA2**        | Underlying LLM model used via OLLaMA         |
+| **Pandas**        | CSV-based order and product data handling    |
+| **Custom VectorStore** | Keyword-based similarity search over product info |
+| **HTML + JS**     | Chat UI using templates and fetch API        |
+| **Uvicorn**       | ASGI server to serve the app locally         |
 
 ---
 
-## 📚 **Datasets Used**
+## 💡 Key Features
 
-### 📦 Order_Data_Dataset.csv
-- Customer ID
-- Order Date
-- Product
-- Sales, Shipping Cost, Priority
-
-_Used for:_ smart order summaries and tracking queries
-
-### 🎸 Product_Information_Dataset.csv
-- Title
-- Description
-- Rating, Price
-- Category
-
-_Used for:_ vector-based product search and recommendations
+✅ Supports both product and order queries  
+✅ Interactive UI with memory support  
+✅ OLLaMA-backed dynamic product responses  
+✅ Custom intent detection and session tracking  
+✅ Modular microservice architecture  
+✅ Easily extensible for real vector DB and auth
 
 ---
 
-## 🔍 **Vectorization (TF-IDF + Cosine)**
+## 🧠 How It Works
 
-```python
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
+### System Flow
+
+```
+User ⇄ Chat UI ⇄ FastAPI
+         ⇓
+       /chat → Intent Router 🧠
+         ├── /product/query → TF-IDF-style search + OLLaMA
+         └── /order/orders/{id} → Pandas CSV lookup
 ```
 
-`vectorstore.py` computes a sparse similarity score across product descriptions and returns the top matches. Lightweight, fast, and local.
+- **PromptEngine** builds intelligent prompts using product data
+- **OrderManager** formats human-readable summaries for customers
+- **ChatRouter** tracks memory and awaits IDs if needed
 
 ---
 
-## 🧠 **Prompt Engine (LLM Simulation)**
+## 🎯 Prompting with OLLaMA (Zero-shot)
 
-- Keeps memory of previous queries
-- Asks for follow-up info (like Customer ID)
-- Generates natural-sounding summaries
+```text
+Here are some products:
+- Ernie Ball Strings ($6.99)
+  Excellent tone and durability for electric guitars.
+- D'Addario Bronze ($10.99)
+  Smooth response for acoustic play.
 
-```python
-class PromptEngine:
-    def __init__(self):
-        self.memory = []
-
-    def handle_query(self, query):
-        # Intent classification → Order or Product → Form response
+User Query: Best guitar strings under $15?
+Answer: ...
 ```
+
+This prompt is passed to OLLaMA’s `LLaMA2` and the response is returned directly to the user.
 
 ---
 
-## 💬 **Sample Interactions**
+## 🗂️ Microservices Breakdown
 
-### 🔎 Product Queries
-**User:** _"Best guitar strings under $15?"_  
-**Bot:**
-```
-1. Ernie Ball Slinky ($6.99) – 4.8⭐
-2. D'Addario Bronze ($10.99) – 4.7⭐
-```
+### 🔹 Chat Service (`app/chat/router.py`)
+- Detects intent (order/product)
+- Tracks conversation context
+- Routes to appropriate backend
 
-### 📦 Order Queries
-**User:** _"What did I order last? My ID is 37077."_  
-**Bot:**
-```
-Your order on 2018-01-02 was for 'Car Media Players'.
-Total: $140 | Shipping: $4.60 | Priority: Medium
-```
+### 🔹 Product Service (`app/product/...`)
+- Uses a vector engine to find relevant items
+- Builds prompts and calls OLLaMA
+
+### 🔹 Order Service (`app/order/...`)
+- Uses Pandas to filter order data
+- Summarizes last order or all orders
 
 ---
 
-## 💻 **Run Locally**
+## 💬 Example Conversations
+
+**User:** "What are the best rated guitar accessories?"  
+**Bot:** "Here are some top picks: Ernie Ball Strings, Amazon A-Frame Stand, and D’Addario Bronze..."
+
+**User:** "What did I order last?"  
+**Bot:** "Please provide your Customer ID."
+
+**User:** "37077"  
+**Bot:** "You ordered 'Car Media Players' on Jan 2, 2018. Price: $140. Priority: Medium."
+
+---
+
+## 📦 Datasets
+
+### `Order_Data_Dataset.csv`
+- Customer_Id, Product, Order_Date, Order_Priority, Sales, Shipping_Cost
+
+### `Product_Information_Dataset.csv`
+- Product, Description, Features, Price, Rating, Category
+
+---
+
+## 💻 Run Locally
 
 ```bash
 git clone https://github.com/YOUR_USERNAME/smart-ecommerce-assistant.git
@@ -125,26 +122,28 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-Visit 👉 [http://127.0.0.1:8000](http://127.0.0.1:8000) and chat with your assistant.
+Visit: [http://localhost:8000](http://localhost:8000)
+
+🧪 Open `/docs` for Swagger testing  
+🧑‍💻 Use the `/` route for the interactive HTML UI
 
 ---
 
-## 📌 **Future Upgrades**
+## 🚀 Future Enhancements
 
-- 🔮 Replace PromptEngine with real OLLaMA LLM
-- 🌍 Add multilingual support
-- 🔐 Add login & customer profiles
-- 📊 Admin dashboard to view query analytics
-
----
-
-## 🎥 **Demo Video**
-
-Check out a full walkthrough of the Smart E-Commerce Assistant:  
-🔗 [Watch on Loom](https://www.loom.com/share/6bfa4d205ff54b0d81a48cfc88cd87f5?sid=7d7d7403-9584-47df-b64c-8180eb9da35c)
+- 🧬 Real vector DB (e.g., FAISS / Chroma)
+- 🔐 User login and session profiles
+- 🌍 Multilingual prompt generation
+- 📈 Analytics dashboard for admin use
 
 ---
 
-## 👨‍💻 Created By
+## 🎥 Demo
 
-Crafted with 💡 by [**Yash Pise**](https://github.com/yp0505)
+📽️ [Click to watch full demo on Loom](https://www.loom.com/share/6bfa4d205ff54b0d81a48cfc88cd87f5?sid=7d7d7403-9584-47df-b64c-8180eb9da35c)
+
+---
+
+## 👨‍💻 Author
+
+Built with ❤️ by [**Yash Pise**](https://github.com/yp0505)
